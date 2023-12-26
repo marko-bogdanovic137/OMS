@@ -1,21 +1,20 @@
-﻿using System;
+﻿using OMS.ConnectionPool;
+using OMS.Model;
+using OMS.Utils;
+using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Data;
-using Oracle.ManagedDataAccess.Client;
-using OMS.ConnectionPool;
-using OMS.Model;
-using OMS.Utils;
 
 namespace OMS.DAO.Impl
 {
-    public class KvarDAOImpl : IKvarDAO
+    public class ElektricniElementDAOImpl : IElektricniElementDAO
     {
         public int Count()
         {
-            string query = "select COUNT(*) from evidencija";
+            string query = "select (*) from elektricni_element";
 
             using (IDbConnection connection = ConnectionUtil_Pooling.GetConnection())
             {
@@ -40,7 +39,7 @@ namespace OMS.DAO.Impl
 
         private bool ExistById(string id, IDbConnection connection)
         {
-            string query = "select * from evidencija where id=:id";
+            string query = "select * from elektricni_element where id=:id";
 
             using (IDbCommand command = connection.CreateCommand())
             {
@@ -52,10 +51,10 @@ namespace OMS.DAO.Impl
             }
         }
 
-        public IEnumerable<Kvar> FindAll()
+        public IEnumerable<ElektricniElement> FindAll()
         {
-            string query = "SELECT * from evidencija";
-            List<Kvar> kvarList = new List<Kvar>();
+            string query = "select id, naziv, tip, geolokacija, naponski_nivo from elektricni_element";
+            List<ElektricniElement> elektricniElementList = new List<ElektricniElement>();
 
             using (IDbConnection connection = ConnectionUtil_Pooling.GetConnection())
             {
@@ -69,50 +68,51 @@ namespace OMS.DAO.Impl
                     {
                         while (reader.Read())
                         {
-                            Kvar kvar = new Kvar(reader.GetString(0), reader.GetString(1),
-                                reader.GetString(2), reader.GetString(3));
-                            kvarList.Add(kvar);
+                            ElektricniElement elektricniElement = new ElektricniElement(reader.GetString(0), reader.GetString(1),
+                                reader.GetString(2), reader.GetString(3), reader.GetString(4));
+                            elektricniElementList.Add(elektricniElement);
                         }
                     }
                 }
             }
-            return kvarList;
+            return elektricniElementList;
         }
 
 
 
-        public int Save(Kvar kvar)
+        public int Save(ElektricniElement elektricniElement)
         {
             using (IDbConnection connection = ConnectionUtil_Pooling.GetConnection())
             {
                 connection.Open();
-                return Save(kvar, connection);
+                return Save(elektricniElement, connection);
             }
         }
 
-        private int Save(Kvar kvar, IDbConnection connection)
+        private int Save(ElektricniElement elektricniElement, IDbConnection connection)
         {
-            string insertSql = "insert into evidencija (id, datum, status, izvestaj) values (:id, :datum, :status, :izvestaj)";
-            string updateSql = "update evidencija set datum=:datum, status=:status, izvestaj=:izvestaj where id=:id";
+            string insertSql = "insert into elektricni_element (id, naziv, tip, geolokacija, naponski_nivo) values (:id, :naziv, :tip, :geolokacija, :naponski_nivo)";
+            string updateSql = "update elektricni_element set id=:id, naziv=:naziv, tip=:tip, geolokacija=:geolokacija, naponski_nivo=:naponski_nivo";
 
             using (IDbCommand command = connection.CreateCommand())
             {
-                command.CommandText = ExistById(kvar.ID, connection) ? updateSql : insertSql;
-                ParameterUtil.AddParameter(command, "id", DbType.String, 20);
-                ParameterUtil.AddParameter(command, "datum", DbType.String, 20);
-                ParameterUtil.AddParameter(command, "status", DbType.String, 20);
-                ParameterUtil.AddParameter(command, "izvestaj", DbType.String, 50);
+                command.CommandText = ExistById(elektricniElement.ID, connection) ? updateSql : insertSql;
+                ParameterUtil.AddParameter(command, "id", DbType.String, 50);
+                ParameterUtil.AddParameter(command, "naziv", DbType.String, 50);
+                ParameterUtil.AddParameter(command, "tip", DbType.String, 50);
+                ParameterUtil.AddParameter(command, "geolokacija", DbType.String, 50);
+                ParameterUtil.AddParameter(command, "naponski_nivo", DbType.String, 50);
                 command.Prepare();
-                ParameterUtil.SetParameterValue(command, "id", kvar.ID);
-                ParameterUtil.SetParameterValue(command, "datum", kvar.Datum);
-                ParameterUtil.SetParameterValue(command, "status", kvar.Status);
-                ParameterUtil.SetParameterValue(command, "izvestaj", kvar.Opis);
-
+                ParameterUtil.SetParameterValue(command, "id", elektricniElement.ID);
+                ParameterUtil.SetParameterValue(command, "naziv", elektricniElement.Naziv);
+                ParameterUtil.SetParameterValue(command, "tip", elektricniElement.Tip);
+                ParameterUtil.SetParameterValue(command, "geolokacija", elektricniElement.GeoLokacija);
+                ParameterUtil.SetParameterValue(command, "naponski_nivo", elektricniElement.NaponskiNivo);
                 return command.ExecuteNonQuery();
             }
         }
 
-        public int SaveAll(IEnumerable<Kvar> kvars)
+        public int SaveAll(IEnumerable<ElektricniElement> elektricniElements)
         {
             using (IDbConnection connection = ConnectionUtil_Pooling.GetConnection())
             {
@@ -121,9 +121,9 @@ namespace OMS.DAO.Impl
 
                 int numSaved = 0;
 
-                foreach (Kvar kvar in kvars)
+                foreach (ElektricniElement elektricniElement in elektricniElements)
                 {
-                    numSaved += Save(kvar, connection);
+                    numSaved += Save(elektricniElement, connection);
                 }
                 transaction.Commit();
 
@@ -131,10 +131,10 @@ namespace OMS.DAO.Impl
             }
         }
 
-        public Kvar FindById(string id)
+        public ElektricniElement FindById(string id)
         {
-            string query = "select id, datum, status, izvestaj from evidencija where id=:id";
-            Kvar kvar = null;
+            string query = "select id, naziv, tip, geolokacija, naponski_nivo from elektricni_element where id=:id";
+            ElektricniElement elektricniElement = null;
 
             using (IDbConnection connection = ConnectionUtil_Pooling.GetConnection())
             {
@@ -149,22 +149,22 @@ namespace OMS.DAO.Impl
                     {
                         if (reader.Read())
                         {
-                            kvar = new Kvar(reader.GetString(0), reader.GetString(1), reader.GetString(2),
-                                reader.GetString(3));
+                            elektricniElement = new ElektricniElement(reader.GetString(0), reader.GetString(1), reader.GetString(2),
+                                reader.GetString(3), reader.GetString(4));
                         }
                     }
                 }
             }
-            return kvar;
+            return elektricniElement;
         }
-        public int Delete(Kvar kvar)
+        public int Delete(ElektricniElement element)
         {
-            return DeleteById(kvar.ID);
+            return DeleteById(element.ID);
         }
 
         public int DeleteById(string id)
         {
-            string query = "delete from evidencija where id=:id";
+            string query = "delete from elektricni_element where id=:id";
 
             using (IDbConnection connection = ConnectionUtil_Pooling.GetConnection())
             {
@@ -179,5 +179,7 @@ namespace OMS.DAO.Impl
                 }
             }
         }
+
     }
 }
+

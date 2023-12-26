@@ -28,14 +28,13 @@ namespace OMS.Model
 
         public static string GetFormattedHeader()
         {
-               return string.Format("{0,-6} {1,-35} {2,-20} {3,-35} ",
-                 "ID", "DATUM", "STATUS", "OPIS");
-            
+            return string.Format("{0,-15} {1,-35} {2,-20} {3,-35} ",
+                "ID", "DATUM", "STATUS", "OPIS");
         }
 
         public override string ToString()
         {
-            return string.Format("{0,-6} {1,-35} {2,-20} {3,-35}",
+            return string.Format("{0,-15} {1,-35} {2,-20} {3,-35}",
                 this.ID, this.Datum, this.Status, this.Opis);
         }
     }

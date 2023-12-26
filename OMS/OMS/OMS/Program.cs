@@ -11,11 +11,11 @@ namespace OMS
     class Program
     {
 
-        private static readonly KvarUIHandler mainUIHandler = new KvarUIHandler();
+        private static readonly MainUIHandler mainUIHandler = new MainUIHandler();
 
         static void Main(string[] args)
         {
-            mainUIHandler.HandleKvarMenu();
+            mainUIHandler.HandleMainMenu();
         }
     }
 }

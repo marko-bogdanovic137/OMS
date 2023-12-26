@@ -15,5 +15,15 @@ namespace OMS.DAO
         bool ExistById(ID id);
 
         T FindById(ID id);
+
+        int Delete(T entity);
+
+        int DeleteById(ID id);
     }
+    public interface ICRUDDao2<T, ID>
+    {
+        int Save(T entity);
+
+		IEnumerable<T> FindAll();
+	}
 }

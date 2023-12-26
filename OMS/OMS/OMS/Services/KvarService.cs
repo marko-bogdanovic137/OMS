@@ -32,5 +32,15 @@ namespace OMS.Services
         {
             return kvarDAO.FindById(id);
         }
+
+        public int Count()
+        {
+            return kvarDAO.Count();
+        }
+
+        public int DeleteById(string id)
+        {
+            return kvarDAO.DeleteById(id);
+        }
     }
 }
