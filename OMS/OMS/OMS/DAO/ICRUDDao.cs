@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace OMS.DAO
 {
@@ -25,5 +26,21 @@ namespace OMS.DAO
         int Save(T entity);
 
 		IEnumerable<T> FindAll();
+
+
+	}
+	public interface ICRUDDao3<T, DateTime>
+	{
+		IEnumerable<T> FindAll(DateTime startDate, DateTime endDate);
+
+        void FindKvar(string id);
+	}
+	public interface ICRUDDao4<T, ID>
+	{
+		int Save(T entity);
+
+		IEnumerable<T> FindAll();
+
+		int CountRowsWithId(string id);
 	}
 }

@@ -21,6 +21,11 @@ namespace OMS.Services
 		{
 			return akcijaDAO.FindAll().ToList();
 		}
+
+		public int CountRowsWithId(string id)
+		{
+			return akcijaDAO.CountRowsWithId(id);
+		}
 	}
 
 }

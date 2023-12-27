@@ -10,32 +10,30 @@ namespace OMS.Model
     {
         public string ID { get; set; }
 
-        public string Datum { get; set; }
+        public DateTime Datum { get; set; }
 
         public string Status { get; set; }
 
-        public string Opis { get; set; }
 
         public Kvar() { }
 
-        public Kvar(string iD, string datum, string status, string opis)
+        public Kvar(string iD,DateTime datum, string status)
         {
             this.ID = iD;
             this.Datum = datum;
             this.Status = status;
-            this.Opis = opis;
         }
 
         public static string GetFormattedHeader()
         {
-            return string.Format("{0,-15} {1,-35} {2,-20} {3,-35} ",
-                "ID", "DATUM", "STATUS", "OPIS");
+            return string.Format("{0,-15} {1,-35} {2,-20} ",
+                "ID", "DATUM", "STATUS");
         }
 
-        public override string ToString()
-        {
-            return string.Format("{0,-15} {1,-35} {2,-20} {3,-35}",
-                this.ID, this.Datum, this.Status, this.Opis);
-        }
-    }
+		public override string ToString()
+		{
+			return string.Format("{0,-15} {1,-35} {2,-20} ",
+				this.ID, this.Datum.ToString("dd.MM.yyyy."), this.Status);
+		}
+	}
 }

@@ -1,6 +1,7 @@
 ﻿using OMS.ConnectionPool;
 using OMS.Model;
 using OMS.Utils;
+using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -39,7 +40,31 @@ namespace OMS.DAO.Impl
 			return akcijaList;
 		}
 
+		public int CountRowsWithId(string id)
+		{
+			string query = "SELECT COUNT(*) from Akcije WHERE ID = :id";
+			int count = 0;
 
+			using (IDbConnection connection = ConnectionUtil_Pooling.GetConnection())
+			{
+				connection.Open();
+				using (IDbCommand command = connection.CreateCommand())
+				{
+					command.CommandText = query;
+					command.Parameters.Add(new OracleParameter("id", id));
+					command.Prepare();
+
+					using (IDataReader reader = command.ExecuteReader())
+					{
+						if (reader.Read())
+						{
+							count = reader.GetInt32(0);
+						}
+					}
+				}
+			}
+			return count;
+		}
 
 
 		public int Save(Akcija akcija)

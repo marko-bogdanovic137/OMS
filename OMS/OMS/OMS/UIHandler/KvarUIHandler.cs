@@ -20,8 +20,12 @@ namespace OMS.UIHandler
         private readonly ElektricniElementService elektricniElementService = new ElektricniElementService();
 		private readonly KvarInfoService kvarInfoService = new KvarInfoService();
         private readonly AkcijaService akcijaService = new AkcijaService();
+        private readonly KvarDatumiUIHandler kvarDatumiUIHandler = new KvarDatumiUIHandler();
 
-        string id = "";
+		private DateTime lastCreationDate = DateTime.MinValue;
+		private int dailyCount = 0;
+
+		string id = "";
 
 		public void HandleKvarMenu()
         {
@@ -36,6 +40,7 @@ namespace OMS.UIHandler
                 Console.WriteLine("4 - Prikazi tabelu KvarInfo");
                 Console.WriteLine("5 - Dodaj akciju");
                 Console.WriteLine("6 - Prikazi akcije");
+                Console.WriteLine("7 - Napredna pretraga kvarova");
                 Console.WriteLine("X - Main menu");
 
                 answer = Console.ReadLine();
@@ -59,6 +64,9 @@ namespace OMS.UIHandler
                         break;
                     case "6":
                         ShowAll3();
+                        break;
+                    case "7":
+                        kvarDatumiUIHandler.HandleKvarDatumiMenu();
                         break;
                 }
             } while (!answer.ToUpper().Equals("X"));
@@ -127,13 +135,18 @@ namespace OMS.UIHandler
                     int inserted = kvarService.Save(kreiranje());
                     if (inserted != 0)
                     {
-                        Console.WriteLine("Kvar uspesno dodat");
+                        Console.WriteLine();
 					    Console.WriteLine("----------------------------------");
+					    Console.WriteLine("Kvar uspesno dodat");
+					    
 				}
                     int inserted2 = kvarInfoService.Save(kreiranje2());
                     if(inserted2 != 0)
                     {
+                        Console.WriteLine();
+                        Console.WriteLine("----------------------------------");
                         Console.WriteLine("Kvar info uspesno dodat");
+                        Console.WriteLine();
                     }
                     
                 }
@@ -174,7 +187,11 @@ namespace OMS.UIHandler
                         Console.WriteLine("Kvar ne postoji");
                         return;
                     }
-
+                    if (postojeciKvar.Status == "Zatvoreno")
+                    {
+                        Console.WriteLine("Nije moguce izmeniti status kvara");
+                        return;
+                    }
                     Console.WriteLine("Odaberite zeljeni status kvara:");
                     string unos = "";
                     string status = " ";
@@ -184,23 +201,28 @@ namespace OMS.UIHandler
                     Console.WriteLine("2. Testiranje");
                     Console.WriteLine("3. Zatvoreno");
                     unos = Console.ReadLine();
+                    Console.WriteLine();
 
                     switch (unos)
                     {
                         case "1":
-                            Console.WriteLine("Status kvara je promenjen u 'U popravci'.");
+							Console.WriteLine("----------------------------------");
+							Console.WriteLine("Status kvara je promenjen u 'U popravci'.");
                             status = "U popravci";
                             break;
                         case "2":
-                            Console.WriteLine("Status kvara je promenjen u 'Testiranje'.");
+							Console.WriteLine("----------------------------------");
+							Console.WriteLine("Status kvara je promenjen u 'Testiranje'.");
                             status = "Testiranje";
                             break;
                         case "3":
-                            Console.WriteLine("Status kvara je promenjen u 'Zatvoreno'.");
+							Console.WriteLine("----------------------------------");
+							Console.WriteLine("Status kvara je promenjen u 'Zatvoreno'.");
                             status = "Zatvoreno";
                             break;
                         default:
-                            Console.WriteLine("Nepoznata opcija. Molimo unesite broj od 1 do 3.");
+							Console.WriteLine("----------------------------------");
+							Console.WriteLine("Nepoznata opcija. Molimo unesite broj od 1 do 3.");
                             break;
                     }
                 }
@@ -212,7 +234,7 @@ namespace OMS.UIHandler
                     int updated = kvarService.Save(noviKvar);
                     if (updated != 0)
                     {
-                        Console.WriteLine("Status kvara uspesno izmenjen");
+                        Console.WriteLine();
                     }
 
                    
@@ -224,60 +246,64 @@ namespace OMS.UIHandler
                 }
             }
 
-            private Kvar kreiranje()
+        private Kvar kreiranje()
+        {
+            string yyyy = "";
+            string MM = "0";
+            string dd = "0";
+            string mm = "-1";
+            string ss = "-1";
+
+            while (!string.Equals(yyyy, "2023"))
             {
-                string yyyy = "";
-                string MM = "0";
-                string dd = "0";
-                string mm = "-1";
-                string ss = "-1";
+                Console.WriteLine("Unesi godinu kvara");
+                yyyy = Console.ReadLine();
+            }
 
-                while (!string.Equals(yyyy, "2023"))
-                {
-                    Console.WriteLine("Unesi godinu kvara");
-                    yyyy = Console.ReadLine();
-                }
+            while (int.Parse(MM) > 12 || int.Parse(MM) < 1)
+            {
+                Console.WriteLine("Unesi mesec kvara");
+                MM = Console.ReadLine();
+            }
 
-                while (int.Parse(MM) > 12 || int.Parse(MM) < 1)
-                {
-                    Console.WriteLine("Unesi mesec kvara");
-                    MM = Console.ReadLine();
-                }
+            while (int.Parse(dd) > 12 || int.Parse(dd) < 1)
+            {
+                Console.WriteLine("Unesi dan kvara");
+                dd = Console.ReadLine();
+            }
 
-                while (int.Parse(dd) > 12 || int.Parse(dd) < 1)
-                {
-                    Console.WriteLine("Unesi dan kvara");
-                    dd = Console.ReadLine();
-                }
+            while (int.Parse(mm) > 60 || int.Parse(mm) < 0)
+            {
+                Console.WriteLine("Unesi minut kvara");
+                mm = Console.ReadLine();
+            }
 
-                while (int.Parse(mm) > 60 || int.Parse(mm) < 0)
-                {
-                    Console.WriteLine("Unesi minut kvara");
-                    mm = Console.ReadLine();
-                }
+            while (int.Parse(ss) > 60 || int.Parse(ss) < 0)
+            {
+                Console.WriteLine("Unesi sekundu kvara");
+                ss = Console.ReadLine();
+            }
 
-                while (int.Parse(ss) > 60 || int.Parse(ss) < 0)
-                {
-                    Console.WriteLine("Unesi sekundu kvara");
-                    ss = Console.ReadLine();
-                }
+            string status = "Nepotvrdjen";
 
-                Console.WriteLine("Unesi datum belezenja kvara");
-                string datum = Console.ReadLine();
+            if (DateTime.Today != lastCreationDate)
+            { 
+				dailyCount = 0;
+				lastCreationDate = DateTime.Today;
+		    }
+			    dailyCount++;
 
 
-                string status = "Nepotvrdjen";
+			id = yyyy + MM + dd + mm + ss + "_" + dailyCount;
 
-                Console.WriteLine("Unesi kratak izvestaj o kvaru");
-                string izvestaj = Console.ReadLine();
-
-                id = yyyy + MM + dd + mm + ss + "_" + kvarService.Count();
+                DateTime datum = DateTime.Today;
 
 
-                return new Kvar(id, datum, status, izvestaj);
+                return new Kvar(id, datum, status);
             }
         private KvarInfo kreiranje2()
         {
+                    Console.WriteLine();
                     Console.WriteLine("Popunjavanje dodatnih informacija za kvar");
 			        Console.WriteLine("----------------------------------");
 			        Console.WriteLine("Unesite kratak opis kvara:");
@@ -297,7 +323,7 @@ namespace OMS.UIHandler
                     string dOpis = Console.ReadLine();
 
                     Console.Write("Da li postoji izvrsena akcija za kvar? DA/NE  ");
-                    string input = Console.ReadLine();
+                    string input = Console.ReadLine().ToUpper();
 
 			    switch (input)
 			    {
@@ -336,6 +362,11 @@ namespace OMS.UIHandler
 				{
 					Console.WriteLine("Kvar ne postoji");
                     return null;
+				}
+				if (postojeciKvar.Status == "Zatvoreno")
+				{
+					Console.WriteLine("Nije moguce dodati akciju kavru");
+					return null;
 				}
 				Console.WriteLine("Unesite datum uzvrsenja akcije: ");
 				datum = Console.ReadLine();

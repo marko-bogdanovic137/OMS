@@ -69,8 +69,8 @@ namespace OMS.DAO.Impl
                     {
                         while (reader.Read())
                         {
-                            Kvar kvar = new Kvar(reader.GetString(0), reader.GetString(1),
-                                reader.GetString(2), reader.GetString(3));
+                            Kvar kvar = new Kvar(reader.GetString(0), reader.GetDateTime(1),
+                                reader.GetString(2));
                             kvarList.Add(kvar);
                         }
                     }
@@ -92,21 +92,19 @@ namespace OMS.DAO.Impl
 
         private int Save(Kvar kvar, IDbConnection connection)
         {
-            string insertSql = "insert into evidencija (id, datum, status, izvestaj) values (:id, :datum, :status, :izvestaj)";
-            string updateSql = "update evidencija set datum=:datum, status=:status, izvestaj=:izvestaj where id=:id";
+            string insertSql = "insert into evidencija (id, datum, status) values (:id, :datum, :status)";
+            string updateSql = "update evidencija set datum=:datum, status=:status where id=:id";
 
             using (IDbCommand command = connection.CreateCommand())
             {
                 command.CommandText = ExistById(kvar.ID, connection) ? updateSql : insertSql;
                 ParameterUtil.AddParameter(command, "id", DbType.String, 20);
-                ParameterUtil.AddParameter(command, "datum", DbType.String, 20);
+                ParameterUtil.AddParameter(command, "datum", DbType.DateTime, 20);
                 ParameterUtil.AddParameter(command, "status", DbType.String, 20);
-                ParameterUtil.AddParameter(command, "izvestaj", DbType.String, 50);
                 command.Prepare();
                 ParameterUtil.SetParameterValue(command, "id", kvar.ID);
                 ParameterUtil.SetParameterValue(command, "datum", kvar.Datum);
                 ParameterUtil.SetParameterValue(command, "status", kvar.Status);
-                ParameterUtil.SetParameterValue(command, "izvestaj", kvar.Opis);
 
                 return command.ExecuteNonQuery();
             }
@@ -133,7 +131,7 @@ namespace OMS.DAO.Impl
 
         public Kvar FindById(string id)
         {
-            string query = "select id, datum, status, izvestaj from evidencija where id=:id";
+            string query = "select id, datum, status from evidencija where id=:id";
             Kvar kvar = null;
 
             using (IDbConnection connection = ConnectionUtil_Pooling.GetConnection())
@@ -149,8 +147,7 @@ namespace OMS.DAO.Impl
                     {
                         if (reader.Read())
                         {
-                            kvar = new Kvar(reader.GetString(0), reader.GetString(1), reader.GetString(2),
-                                reader.GetString(3));
+                            kvar = new Kvar(reader.GetString(0), reader.GetDateTime(1), reader.GetString(2));
                         }
                     }
                 }
