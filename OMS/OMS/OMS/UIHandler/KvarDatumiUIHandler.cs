@@ -51,7 +51,7 @@ namespace OMS.UIHandler
 			string input2 = "";
 			while (true)
 			{
-				Console.WriteLine("Unesite pocetni datum (pr. 26.12.2023): ");
+				Console.WriteLine("Unesite pocetni datum (pr. 26.12.2023.): ");
 				input = Console.ReadLine();
 				if (DateTime.TryParse(input, out date))
 				{

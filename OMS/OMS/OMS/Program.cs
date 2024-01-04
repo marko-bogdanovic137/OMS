@@ -15,6 +15,7 @@ namespace OMS
 
         static void Main(string[] args)
         {
+
             mainUIHandler.HandleMainMenu();
         }
     }
