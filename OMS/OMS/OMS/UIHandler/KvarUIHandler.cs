@@ -21,6 +21,7 @@ namespace OMS.UIHandler
 		private readonly KvarInfoService kvarInfoService = new KvarInfoService();
         private readonly AkcijaService akcijaService = new AkcijaService();
         private readonly KvarDatumiUIHandler kvarDatumiUIHandler = new KvarDatumiUIHandler();
+        private readonly PrenosService prenosService = new PrenosService();
 
 		private DateTime lastCreationDate = DateTime.MinValue;
 		private int dailyCount = 0;
@@ -41,6 +42,7 @@ namespace OMS.UIHandler
                 Console.WriteLine("5 - Dodaj akciju");
                 Console.WriteLine("6 - Prikazi akcije");
                 Console.WriteLine("7 - Napredna pretraga kvarova");
+                Console.WriteLine("8 - Kreiraj Exel tabelu");
                 Console.WriteLine("X - Main menu");
 
                 answer = Console.ReadLine();
@@ -67,6 +69,9 @@ namespace OMS.UIHandler
                         break;
                     case "7":
                         kvarDatumiUIHandler.HandleKvarDatumiMenu();
+                        break;
+                    case "8":
+                        KreirajTabelu();
                         break;
                 }
             } while (!answer.ToUpper().Equals("X"));
@@ -377,6 +382,19 @@ namespace OMS.UIHandler
 				return new Akcija(stringo, datum, opis);
 			}
             return new Akcija(id, datum, opis);
+        }
+
+        public void KreirajTabelu()
+        {
+            try
+            {
+                prenosService.Prenos();
+                Console.WriteLine("Excel tabela uspesno kreirana");
+            }
+            catch (DbException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
     }
 }

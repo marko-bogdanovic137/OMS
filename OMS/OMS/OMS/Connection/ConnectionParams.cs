@@ -12,7 +12,7 @@ namespace OMS.Connection
         //public static readonly string CLASSROM_DATA_SOURCE_ = "//192.168.0.102:1522/db2016";
 
         public static readonly string USER_ID = "sys";
-        public static readonly string PASSWORD = "1337";
+        public static readonly string PASSWORD = "ftn";
         public static readonly string DBA_PRIVILEGE = "SYSDBA";
     }
 }
