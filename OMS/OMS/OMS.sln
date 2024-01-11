@@ -5,6 +5,8 @@ VisualStudioVersion = 17.8.34330.188
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OMS", "OMS\OMS.csproj", "{CEFF18B5-BB3F-4994-AC3C-62ABF6412A0C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestKvar", "UnitTestKvar\UnitTestKvar.csproj", "{06436473-E8CD-4FD4-B174-FADFD22F96A7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{CEFF18B5-BB3F-4994-AC3C-62ABF6412A0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CEFF18B5-BB3F-4994-AC3C-62ABF6412A0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CEFF18B5-BB3F-4994-AC3C-62ABF6412A0C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06436473-E8CD-4FD4-B174-FADFD22F96A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06436473-E8CD-4FD4-B174-FADFD22F96A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06436473-E8CD-4FD4-B174-FADFD22F96A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06436473-E8CD-4FD4-B174-FADFD22F96A7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

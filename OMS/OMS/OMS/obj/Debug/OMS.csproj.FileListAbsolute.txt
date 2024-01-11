@@ -86,3 +86,7 @@ C:\Users\Duska\Desktop\PROJJJ\OMS\OMS\OMS\OMS\obj\Debug\OMS.csproj.CoreCompileIn
 C:\Users\Duska\Desktop\PROJJJ\OMS\OMS\OMS\OMS\obj\Debug\OMS.csproj.CopyComplete
 C:\Users\Duska\Desktop\PROJJJ\OMS\OMS\OMS\OMS\obj\Debug\OMS.exe
 C:\Users\Duska\Desktop\PROJJJ\OMS\OMS\OMS\OMS\obj\Debug\OMS.pdb
+C:\Users\Duska\Desktop\PROJJJ\OMS\OMS\OMS\OMS\bin\Debug\nunit.framework.dll
+C:\Users\Duska\Desktop\PROJJJ\OMS\OMS\OMS\OMS\bin\Debug\nunit.framework.legacy.dll
+C:\Users\Duska\Desktop\PROJJJ\OMS\OMS\OMS\OMS\bin\Debug\nunit.framework.xml
+C:\Users\Duska\Desktop\PROJJJ\OMS\OMS\OMS\OMS\bin\Debug\nunit.framework.legacy.xml

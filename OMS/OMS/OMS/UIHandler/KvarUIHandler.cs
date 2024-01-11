@@ -259,7 +259,7 @@ namespace OMS.UIHandler
             string mm = "-1";
             string ss = "-1";
 
-            while (!string.Equals(yyyy, "2023"))
+            while (!string.Equals(yyyy, "2024"))
             {
                 Console.WriteLine("Unesi godinu kvara");
                 yyyy = Console.ReadLine();
@@ -271,7 +271,7 @@ namespace OMS.UIHandler
                 MM = Console.ReadLine();
             }
 
-            while (int.Parse(dd) > 12 || int.Parse(dd) < 1)
+            while (int.Parse(dd) > 30 || int.Parse(dd) < 1)
             {
                 Console.WriteLine("Unesi dan kvara");
                 dd = Console.ReadLine();
@@ -333,7 +333,7 @@ namespace OMS.UIHandler
 			    switch (input)
 			    {
 				case "DA":
-                    kreiranje3();
+                    UnosAkcije();
 					break;
 				case "NE":
 					break;
