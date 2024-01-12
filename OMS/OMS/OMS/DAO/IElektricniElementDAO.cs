@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace OMS.DAO
 {
-    public interface IElektricniElementDAO : ICRUDDao<ElektricniElement, string>
+    public interface IElektricniElementDAO : ICRUDDao5<ElektricniElement, string>
     {
     }
 }

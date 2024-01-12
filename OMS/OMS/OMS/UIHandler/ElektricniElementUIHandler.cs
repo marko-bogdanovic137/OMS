@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using OMS.Model;
 using OMS.Service;
 using System.Data.Common;
+using OMS.Services;
 
 
 namespace OMS.UIHandler
@@ -23,7 +24,7 @@ namespace OMS.UIHandler
                 Console.WriteLine("Odaberite opciju za rad sa elektricnim elementima:");
                 Console.WriteLine("1 - Prikaz svih");
                 Console.WriteLine("2 - Unos jednog elementa");
-
+                Console.WriteLine("3 - Napravi txt fajl sa tipovima elemenata");
                 Console.WriteLine("X - Izlazak iz aplikacije");
 
                 answer = Console.ReadLine();
@@ -35,6 +36,9 @@ namespace OMS.UIHandler
                         break;
                     case "2":
                         UnosJednog();
+                        break;
+                    case "3":
+                        IspisTxt();
                         break;
 
                 }
@@ -73,14 +77,28 @@ namespace OMS.UIHandler
             Console.WriteLine("Unesite geolokaciju elektricnog elementa");
             string geolokacija = Console.ReadLine();
 
+            Console.WriteLine("Da li zelite da unesete naponski nivo? DA/NE");
+            string input = Console.ReadLine().ToUpper();
             string naponskiNivo = "";
-            do
-            {
-                Console.WriteLine("Unesite naponski nivo elektricnog elementa (visoki/srednji/nizak napon)");
-                naponskiNivo = Console.ReadLine();
 
+            switch (input)
+            {
+                case "DA":
+                    do
+                    {
+                        Console.WriteLine("Unesite naponski nivo elektricnog elementa (visoki/srednji/nizak napon)");
+                        naponskiNivo = Console.ReadLine();
+
+                    }
+                    while (!IsValidInput(naponskiNivo));
+                    break;
+                case "NE":
+                    naponskiNivo = "srednji napon";
+                    break;
+                default:
+                    Console.WriteLine("Nepoznata opcija.");
+                    break;
             }
-            while (!IsValidInput(naponskiNivo));
             
 
             try
@@ -97,9 +115,22 @@ namespace OMS.UIHandler
             }
         }
 
+
         static bool IsValidInput(string input)
         {
             return input!="visoki napon" || input != "srednji napon" || input != "nizak napon";
+        }
+
+        public void IspisTxt()
+        {
+            try
+            {
+                elektricniElementService.IspisiTip();
+            }
+            catch (DbException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
     }

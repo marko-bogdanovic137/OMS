@@ -43,4 +43,25 @@ namespace OMS.DAO
 
 		int CountRowsWithId(string id);
 	}
+
+    public interface ICRUDDao5<T, ID>
+    {
+        int Count();
+
+        IEnumerable<T> FindAll();
+
+        int Save(T entity);
+
+        int SaveAll(IEnumerable<T> entities);
+
+        bool ExistById(ID id);
+
+        T FindById(ID id);
+
+        int Delete(T entity);
+
+        int DeleteById(ID id);
+
+        bool IspisiTip();
+    }
 }

@@ -4,9 +4,14 @@ using OMS.Utils;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
+using System.IO;
 
 namespace OMS.DAO.Impl
 {
@@ -180,6 +185,42 @@ namespace OMS.DAO.Impl
             }
         }
 
+
+        public bool IspisiTip()
+        {
+            string query = "select tip from elektricni_element";
+            List<string> tipovi = new List<string>();
+            string tip = "";
+
+            using (IDbConnection connection = ConnectionUtil_Pooling.GetConnection())
+            {
+                connection.Open();
+                
+                using (IDbCommand command = connection.CreateCommand())
+                {
+                    command.CommandText = query;
+                    using (IDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            tip = reader.GetString(0);
+                            tipovi.Add(tip);
+                        }
+
+                    }
+                }
+            }
+            SnimiEvidenciju(tipovi);
+            return true;
+        }
+        public const string filePath = @"C:\Users\Duska\Desktop\PROJJJ\OMS\OMS\OMS\TipoviElemenata.txt";
+
+        public static void SnimiEvidenciju(List<string> tipovi)
+        {
+            string[] lines = tipovi.ToArray();
+            File.WriteAllLines(filePath, lines);
+            Console.WriteLine("Tipovi elemenata su izvučeni iz baze i sačuvani u fajlu.");
+        } 
     }
 }
 

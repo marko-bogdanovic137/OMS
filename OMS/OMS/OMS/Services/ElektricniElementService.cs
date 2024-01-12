@@ -32,5 +32,10 @@ namespace OMS.Service
             return elektricniElementDAO.FindById(id);
         }
 
+        public bool IspisiTip()
+        {
+            return elektricniElementDAO.IspisiTip();
+        }
+
     }
 }
